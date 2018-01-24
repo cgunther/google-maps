@@ -17,7 +17,10 @@ module Google
       end
 
       def self.find(address, language=:en)
-        API.query(:geocode_service, :language => language, :address => address).results.map { |result| Location.new(result.formatted_address, result.geometry.location.lat, result.geometry.location.lng) }
+        args = { language: language, address: address }
+        args.merge!(key: Google::Maps.api_key) unless Google::Maps.api_key.nil?
+
+        API.query(:geocode_service, args).results.map { |result| Location.new(result.formatted_address, result.geometry.location.lat, result.geometry.location.lng) }
       end
     end
 
